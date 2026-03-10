@@ -346,53 +346,7 @@
                         </div>
                     </div>
                     <div id="passport-timeline" class="relative border-l-2 border-primary ml-4 space-y-8 pl-8 pb-4">
-                        
-                        <div class="relative deletable-entry transition-all duration-300">
-                            <div class="absolute -left-[41px] bg-primary text-white h-8 w-8 rounded-full flex items-center justify-center border-4 border-lightBg dark:border-darkBg shadow">
-                                <i class="fa-solid fa-check text-xs"></i>
-                            </div>
-                            <div class="bg-white dark:bg-darkCard p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 relative">
-                                <input type="checkbox" class="delete-checkbox hidden absolute top-5 right-5 w-5 h-5 accent-red-500 cursor-pointer">
-                                <div class="flex justify-between items-center mb-2 pr-8">
-                                    <h3 class="font-bold text-primary">Chamberlain Park</h3>
-                                    <span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-gray-500">Maiden Round</span>
-                                </div>
-                                <p class="text-sm text-gray-600 dark:text-gray-300">
-                                    ⛳ 4 Holes Played (Par 4,4,4,3) <br>
-                                    📊 Score: <span class="font-bold">61 Gross / 37 Net</span> <br>
-                                    Notes: Double-bogey or better net on three holes. Managed distances well!
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="relative deletable-entry transition-all duration-300">
-                            <div class="absolute -left-[41px] bg-primary text-white h-8 w-8 rounded-full flex items-center justify-center border-4 border-lightBg dark:border-darkBg shadow">
-                                <i class="fa-solid fa-check text-xs"></i>
-                            </div>
-                            <div class="bg-white dark:bg-darkCard p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 relative">
-                                <input type="checkbox" class="delete-checkbox hidden absolute top-5 right-5 w-5 h-5 accent-red-500 cursor-pointer">
-                                <div class="flex justify-between items-center mb-2 pr-8">
-                                    <h3 class="font-bold text-primary">Golf Warehouse Ellerslie</h3>
-                                    <span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-gray-500">Pitch & Putt</span>
-                                </div>
-                                <p class="text-sm text-gray-600 dark:text-gray-300">
-                                    ⛳ 9 Holes Played (Par 27) <br>
-                                    ⏱️ Pace: 52 minutes <br>
-                                    Notes: Clean irons on 1 and 2. Finished every hole without blow-ups!
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="relative">
-                            <div class="absolute -left-[41px] bg-gray-300 dark:bg-gray-700 text-white h-8 w-8 rounded-full flex items-center justify-center border-4 border-lightBg dark:border-darkBg">
-                                <i class="fa-solid fa-lock text-xs"></i>
-                            </div>
-                            <div class="opacity-60">
-                                <h3 class="font-bold text-gray-500">Next Milestone</h3>
-                                <p class="text-sm text-gray-500">First Official Full 18 Holes & starting Handicap tracking via Golf NZ.</p>
-                            </div>
-                        </div>
-
+                        <!-- Timeline entries rendered from appState.passport.rounds -->
                     </div>
                 </div>
             </div>
@@ -662,19 +616,170 @@
 
     <!-- Interactive Scripts -->
     <script>
-        // Dark Mode Toggle Logic
+        // ==========================================
+        // 🌐 APP STATE & PERSISTENCE
+        // ==========================================
+        const STORAGE_KEY = 'colvinGolfHubStateV1';
+
+        const targetContactMap = {
+            "Driver": "Slight push/straight",
+            "3-Wood": "Sweep (Forward ball)",
+            "5-Wood": "Sweep (Forward ball)",
+            "3-Hybrid": "Sweep (Forward ball)",
+            "4-Hybrid": "Sweep (Forward ball)",
+            "5-Hybrid": "Sweep (Forward ball)",
+            "4-Iron": "Slight downward strike",
+            "5-Iron": "Slight downward strike",
+            "6-Iron": "Clean downward strike",
+            "7-Iron": "Flush, middle face",
+            "8-Iron": "Clean downward strike",
+            "9-Iron": "Clean downward strike",
+            "Pitching Wedge (PW)": "Controlled approach",
+            "Sand Wedge (SW)": "Open face, bounce",
+            "Lob Wedge (LW)": "High, soft landing",
+            "Putter": "Smooth pendulum"
+        };
+
+        const defaultState = {
+            userPrefs: {
+                theme: null, // 'light' | 'dark' | null (system)
+                defaultTabId: 'clubhouse'
+            },
+            bag: {
+                clubs: [
+                    { id: 'club-driver', club: "Driver", carry: "160 – 200", contact: targetContactMap["Driver"], isFav: false },
+                    { id: 'club-4h', club: "4-Hybrid", carry: "130 – 160", contact: targetContactMap["4-Hybrid"], isFav: false },
+                    { id: 'club-7i', club: "7-Iron", carry: "110 – 130", contact: targetContactMap["7-Iron"], isFav: true },
+                    { id: 'club-9i', club: "9-Iron", carry: "85 – 115", contact: targetContactMap["9-Iron"], isFav: false },
+                    { id: 'club-pw', club: "Pitching Wedge (PW)", carry: "80 – 110", contact: targetContactMap["Pitching Wedge (PW)"], isFav: false }
+                ],
+                specs: {
+                    height: "188",
+                    weight: "90",
+                    arm: "Right-Handed",
+                    shaft: "+0.5\" to +1\" (Future)",
+                    flex: "Regular (R)",
+                    grip: "Soft / Winn"
+                },
+                wishlist: [
+                    { id: 'wish-hybrid', text: "Used 4 or 5 Hybrid (~NZD 50-100)", link: "https://www.trademe.co.nz/" },
+                    { id: 'wish-irons', text: "Cavity-Back Iron Set", link: "" }
+                ]
+            },
+            passport: {
+                rounds: [
+                    {
+                        id: 'round-chamberlain',
+                        courseName: "Chamberlain Park",
+                        holesLabel: "4 Holes Played (Par 4,4,4,3)",
+                        par: "4,4,4,3",
+                        grossScore: "61",
+                        netScore: "37",
+                        notes: "Double-bogey or better net on three holes. Managed distances well!",
+                        tag: "Maiden Round",
+                        icon: "check"
+                    },
+                    {
+                        id: 'round-ellerslie',
+                        courseName: "Golf Warehouse Ellerslie",
+                        holesLabel: "9 Holes Played (Par 27)",
+                        par: "27",
+                        grossScore: null,
+                        netScore: null,
+                        notes: "Clean irons on 1 and 2. Finished every hole without blow-ups!",
+                        tag: "Pitch & Putt",
+                        icon: "check"
+                    },
+                    {
+                        id: 'round-milestone-next',
+                        courseName: "Next Milestone",
+                        holesLabel: "",
+                        par: "",
+                        grossScore: null,
+                        netScore: null,
+                        notes: "First Official Full 18 Holes & starting Handicap tracking via Golf NZ.",
+                        tag: "Locked",
+                        icon: "lock"
+                    }
+                ]
+            },
+            topTracer: {
+                sessions: []
+            }
+        };
+
+        function cloneDefaultState() {
+            return JSON.parse(JSON.stringify(defaultState));
+        }
+
+        function loadState() {
+            try {
+                const raw = window.localStorage.getItem(STORAGE_KEY);
+                if (!raw) return cloneDefaultState();
+                const parsed = JSON.parse(raw);
+                // Very light merge to avoid losing new defaults
+                const state = cloneDefaultState();
+                if (parsed.userPrefs) state.userPrefs = { ...state.userPrefs, ...parsed.userPrefs };
+                if (parsed.bag) {
+                    if (Array.isArray(parsed.bag.clubs)) state.bag.clubs = parsed.bag.clubs;
+                    if (parsed.bag.specs) state.bag.specs = { ...state.bag.specs, ...parsed.bag.specs };
+                    if (Array.isArray(parsed.bag.wishlist)) state.bag.wishlist = parsed.bag.wishlist;
+                }
+                if (parsed.passport && Array.isArray(parsed.passport.rounds)) {
+                    state.passport.rounds = parsed.passport.rounds;
+                }
+                if (parsed.topTracer && Array.isArray(parsed.topTracer.sessions)) {
+                    state.topTracer.sessions = parsed.topTracer.sessions;
+                }
+                return state;
+            } catch (e) {
+                console.warn('Failed to load saved state, using defaults.', e);
+                return cloneDefaultState();
+            }
+        }
+
+        let appState = loadState();
+
+        function saveState() {
+            try {
+                window.localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+            } catch (e) {
+                console.warn('Failed to save state.', e);
+            }
+        }
+
+        function createId(prefix) {
+            return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+        }
+
+        // Dark Mode Toggle Logic (now using userPrefs)
         const html = document.documentElement;
         const themeToggle = document.getElementById('theme-toggle');
         const sunIcon = document.getElementById('sun-icon');
         const moonIcon = document.getElementById('moon-icon');
 
-        // Check system preference on load
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            html.classList.add('dark');
+        function applyThemeFromState() {
+            const pref = appState.userPrefs.theme;
+            if (pref === 'dark') {
+                html.classList.add('dark');
+            } else if (pref === 'light') {
+                html.classList.remove('dark');
+            } else {
+                // System preference
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    html.classList.add('dark');
+                } else {
+                    html.classList.remove('dark');
+                }
+            }
         }
 
+        applyThemeFromState();
+
         themeToggle.addEventListener('click', () => {
-            html.classList.toggle('dark');
+            const isDark = html.classList.toggle('dark');
+            appState.userPrefs.theme = isDark ? 'dark' : 'light';
+            saveState();
         });
 
         // Tab Navigation Logic
@@ -753,28 +858,21 @@
             const score = document.getElementById('course-score').value;
             const notes = document.getElementById('course-notes').value;
 
-            // Reflect in Passport Timeline
-            const timeline = document.getElementById('passport-timeline');
-            const newEntry = document.createElement('div');
-            newEntry.className = 'relative animate-[fadeIn_0.5s_ease-in-out] deletable-entry transition-all duration-300';
-            newEntry.innerHTML = `
-                <div class="absolute -left-[41px] bg-primary text-white h-8 w-8 rounded-full flex items-center justify-center border-4 border-lightBg dark:border-darkBg shadow">
-                    <i class="fa-solid fa-flag text-xs"></i>
-                </div>
-                <div class="bg-white dark:bg-darkCard p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 relative">
-                    <input type="checkbox" class="delete-checkbox hidden absolute top-5 right-5 w-5 h-5 accent-red-500 cursor-pointer">
-                    <div class="flex justify-between items-center mb-2 pr-8">
-                        <h3 class="font-bold text-primary">${name}</h3>
-                        <span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-gray-500">Just Logged</span>
-                    </div>
-                    <p class="text-sm text-gray-600 dark:text-gray-300">
-                        ⛳ ${holes} (Par ${par}) <br>
-                        📊 Score: <span class="font-bold">${score} Gross</span> <br>
-                        Notes: ${notes || 'No notes provided.'}
-                    </p>
-                </div>
-            `;
-            timeline.insertBefore(newEntry, timeline.children[0]);
+            // Persist in appState and re-render
+            const round = {
+                id: createId('round'),
+                courseName: name,
+                holesLabel: holes,
+                par: String(par || ''),
+                grossScore: String(score || ''),
+                netScore: null,
+                notes: notes || 'No notes provided.',
+                tag: "Just Logged",
+                icon: "flag"
+            };
+            appState.passport.rounds.unshift(round);
+            saveState();
+            renderPassportTimeline();
             
             closeModal();
             e.target.reset();
@@ -786,29 +884,45 @@
         function handleTopTracerSubmit(e) {
             e.preventDefault();
 
-            const club = document.getElementById('tt-club').value;
+            const clubName = document.getElementById('tt-club').value;
+            const shots = document.getElementById('tt-shots').value;
             const carry = document.getElementById('tt-carry').value;
-            
-            // Reflect in Bag Yardages dynamically
-            const clubIndex = bagData.findIndex(c => c.club === club);
-            if (clubIndex !== -1) {
-                bagData[clubIndex].carry = carry;
-                renderClubs(); // Re-render table
-                
-                // Highlight the updated cell
-                setTimeout(() => {
-                    const row = document.querySelector(`tr[data-club-id="${bagData[clubIndex].id}"]`);
-                    if(row) {
-                        const cell = row.children[1];
-                        cell.innerHTML = `~ ${carry} m <span class="text-xs text-accent ml-2">(Updated)</span>`;
-                        cell.classList.add('bg-green-100', 'dark:bg-green-900/30', 'transition-colors', 'duration-500');
-                        setTimeout(() => {
-                            cell.classList.remove('bg-green-100', 'dark:bg-green-900/30');
-                            renderClubs(); // Reset to normal view
-                        }, 2500);
-                    }
-                }, 50);
+            const total = document.getElementById('tt-total').value;
+            const speed = document.getElementById('tt-speed').value;
+            const launch = document.getElementById('tt-launch').value;
+            const height = document.getElementById('tt-height').value;
+            const landing = document.getElementById('tt-landing').value;
+            const hang = document.getElementById('tt-hang').value;
+            const curve = document.getElementById('tt-curve').value;
+            const offline = document.getElementById('tt-offline').value;
+
+            const clubObj = appState.bag.clubs.find(c => c.club === clubName);
+            const clubId = clubObj ? clubObj.id : null;
+
+            const session = {
+                id: createId('tt'),
+                clubId,
+                clubName,
+                shotsTracked: Number(shots) || 0,
+                carry: String(carry || ''),
+                total: String(total || ''),
+                speed,
+                launch,
+                height,
+                landing,
+                hangTime: String(hang || ''),
+                curve,
+                offline
+            };
+
+            appState.topTracer.sessions.unshift(session);
+
+            if (clubObj && carry) {
+                clubObj.carry = carry;
             }
+
+            saveState();
+            renderClubs();
 
             closeModal();
             e.target.reset();
@@ -849,67 +963,32 @@
                 return;
             }
             
-            checkedBoxes.forEach(cb => {
-                const entry = cb.closest('.deletable-entry');
-                if (entry) {
-                    entry.classList.add('opacity-0', 'scale-95'); // Fade out effect
-                    setTimeout(() => entry.remove(), 300);
-                }
-            });
+            const idsToDelete = Array.from(checkedBoxes)
+                .map(cb => cb.dataset.roundId)
+                .filter(Boolean);
 
-            // Turn off delete mode after deleting
-            setTimeout(toggleDeleteMode, 300);
+            if (idsToDelete.length === 0) {
+                toggleDeleteMode();
+                return;
+            }
+
+            appState.passport.rounds = appState.passport.rounds.filter(r => !idsToDelete.includes(r.id));
+            saveState();
+            renderPassportTimeline();
+            toggleDeleteMode();
         }
 
         // ==========================================
-        // 🎒 DYNAMIC BAG & YARDAGES DATA LOGIC 🎒
+        // 🎒 RENDERING FROM appState
         // ==========================================
-
-        const targetContactMap = {
-            "Driver": "Slight push/straight",
-            "3-Wood": "Sweep (Forward ball)",
-            "5-Wood": "Sweep (Forward ball)",
-            "3-Hybrid": "Sweep (Forward ball)",
-            "4-Hybrid": "Sweep (Forward ball)",
-            "5-Hybrid": "Sweep (Forward ball)",
-            "4-Iron": "Slight downward strike",
-            "5-Iron": "Slight downward strike",
-            "6-Iron": "Clean downward strike",
-            "7-Iron": "Flush, middle face",
-            "8-Iron": "Clean downward strike",
-            "9-Iron": "Clean downward strike",
-            "Pitching Wedge (PW)": "Controlled approach",
-            "Sand Wedge (SW)": "Open face, bounce",
-            "Lob Wedge (LW)": "High, soft landing",
-            "Putter": "Smooth pendulum"
-        };
-
-        // Initial State
-        let bagData = [
-            { id: 1, club: "Driver", carry: "160 – 200", contact: targetContactMap["Driver"], isFav: false },
-            { id: 2, club: "4-Hybrid", carry: "130 – 160", contact: targetContactMap["4-Hybrid"], isFav: false },
-            { id: 3, club: "7-Iron", carry: "110 – 130", contact: targetContactMap["7-Iron"], isFav: true },
-            { id: 4, club: "9-Iron", carry: "85 – 115", contact: targetContactMap["9-Iron"], isFav: false },
-            { id: 5, club: "Pitching Wedge (PW)", carry: "80 – 110", contact: targetContactMap["Pitching Wedge (PW)"], isFav: false }
-        ];
-
-        let specsData = {
-            height: "188", weight: "90", arm: "Right-Handed", 
-            shaft: "+0.5\" to +1\" (Future)", flex: "Regular (R)", grip: "Soft / Winn"
-        };
-
-        let wishlistData = [
-            { text: "Used 4 or 5 Hybrid (~NZD 50-100)", link: "https://www.trademe.co.nz/" },
-            { text: "Cavity-Back Iron Set", link: "" }
-        ];
 
         let editBagData = [];
         let editWishlistData = [];
 
-        // --- Render Functions ---
+        // Bag & Yardages
         function renderClubs() {
             const tbody = document.getElementById('carry-table-body');
-            tbody.innerHTML = bagData.map(item => `
+            tbody.innerHTML = appState.bag.clubs.map(item => `
                 <tr data-club-id="${item.id}" class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors ${item.isFav ? 'bg-blue-50/30 dark:bg-blue-900/10' : ''}">
                     <td class="p-4 font-bold flex items-center">
                         ${item.isFav ? '<i class="fa-solid fa-star text-yellow-400 mr-2 text-xs"></i>' : ''} ${item.club}
@@ -921,11 +1000,12 @@
 
             // Update TopTracer Dropdown
             const ttDropdown = document.getElementById('tt-club');
-            ttDropdown.innerHTML = bagData.map(item => `<option value="${item.club}">${item.club}</option>`).join('');
+            ttDropdown.innerHTML = appState.bag.clubs.map(item => `<option value="${item.club}">${item.club}</option>`).join('');
         }
 
         function renderSpecs() {
             const list = document.getElementById('specs-list');
+            const specsData = appState.bag.specs;
             list.innerHTML = `
                 <li class="flex justify-between items-center text-sm"><span class="text-gray-500">Height / Weight:</span><span class="font-bold">${specsData.height} cm / ${specsData.weight} kg</span></li>
                 <li class="flex justify-between items-center text-sm"><span class="text-gray-500">Arm:</span><span class="font-bold">${specsData.arm}</span></li>
@@ -937,12 +1017,61 @@
 
         function renderWishlist() {
             const list = document.getElementById('wishlist-list');
-            list.innerHTML = wishlistData.map(item => `
+            list.innerHTML = appState.bag.wishlist.map(item => `
                 <li class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg flex justify-between items-center">
                     <div class="font-semibold text-sm">${item.text}</div>
                     ${item.link ? `<a href="${item.link}" target="_blank" class="text-primary hover:text-primaryHover"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : ''}
                 </li>
             `).join('');
+        }
+
+        // Passport timeline
+        function renderPassportTimeline() {
+            const container = document.getElementById('passport-timeline');
+            if (!container) return;
+
+            container.innerHTML = appState.passport.rounds.map(round => {
+                const isLocked = round.icon === 'lock';
+                if (isLocked) {
+                    return `
+                        <div class="relative">
+                            <div class="absolute -left-[41px] bg-gray-300 dark:bg-gray-700 text-white h-8 w-8 rounded-full flex items-center justify-center border-4 border-lightBg dark:border-darkBg">
+                                <i class="fa-solid fa-lock text-xs"></i>
+                            </div>
+                            <div class="opacity-60">
+                                <h3 class="font-bold text-gray-500">${round.courseName}</h3>
+                                <p class="text-sm text-gray-500">${round.notes}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                const iconClass = round.icon === 'flag' ? 'fa-flag' : 'fa-check';
+                const tagLabel = round.tag || '';
+                const scoreLine = round.grossScore || round.netScore
+                    ? `📊 Score: <span class="font-bold">${[round.grossScore && `${round.grossScore} Gross`, round.netScore && `${round.netScore} Net`].filter(Boolean).join(' / ')}</span> <br>`
+                    : '';
+
+                return `
+                    <div class="relative deletable-entry transition-all duration-300">
+                        <div class="absolute -left-[41px] bg-primary text-white h-8 w-8 rounded-full flex items-center justify-center border-4 border-lightBg dark:border-darkBg shadow">
+                            <i class="fa-solid ${iconClass} text-xs"></i>
+                        </div>
+                        <div class="bg-white dark:bg-darkCard p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 relative">
+                            <input type="checkbox" data-round-id="${round.id}" class="delete-checkbox hidden absolute top-5 right-5 w-5 h-5 accent-red-500 cursor-pointer">
+                            <div class="flex justify-between items-center mb-2 pr-8">
+                                <h3 class="font-bold text-primary">${round.courseName}</h3>
+                                ${tagLabel ? `<span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-gray-500">${tagLabel}</span>` : ''}
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">
+                                ${round.holesLabel ? `⛳ ${round.holesLabel} <br>` : ''}
+                                ${scoreLine}
+                                ${round.notes ? `Notes: ${round.notes}` : ''}
+                            </p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
         // --- Editing Modals Logic ---
@@ -957,17 +1086,17 @@
             }, 10);
 
             if (type === 'clubs') {
-                editBagData = JSON.parse(JSON.stringify(bagData));
+                editBagData = JSON.parse(JSON.stringify(appState.bag.clubs));
                 renderEditClubsUI();
             } else if (type === 'specs') {
-                document.getElementById('spec-height').value = specsData.height;
-                document.getElementById('spec-weight').value = specsData.weight;
-                document.getElementById('spec-arm').value = specsData.arm;
-                document.getElementById('spec-shaft').value = specsData.shaft;
-                document.getElementById('spec-flex').value = specsData.flex;
-                document.getElementById('spec-grip').value = specsData.grip;
+                document.getElementById('spec-height').value = appState.bag.specs.height;
+                document.getElementById('spec-weight').value = appState.bag.specs.weight;
+                document.getElementById('spec-arm').value = appState.bag.specs.arm;
+                document.getElementById('spec-shaft').value = appState.bag.specs.shaft;
+                document.getElementById('spec-flex').value = appState.bag.specs.flex;
+                document.getElementById('spec-grip').value = appState.bag.specs.grip;
             } else if (type === 'wishlist') {
-                editWishlistData = JSON.parse(JSON.stringify(wishlistData));
+                editWishlistData = JSON.parse(JSON.stringify(appState.bag.wishlist));
                 renderEditWishlistUI();
             }
         }
@@ -1048,14 +1177,15 @@
         }
 
         function saveClubs() {
-            bagData = [...editBagData];
+            appState.bag.clubs = [...editBagData];
+            saveState();
             renderClubs();
             closeEditModal('clubs');
         }
 
         // Specs Editing
         function saveSpecs() {
-            specsData = {
+            appState.bag.specs = {
                 height: document.getElementById('spec-height').value || "188",
                 weight: document.getElementById('spec-weight').value || "90",
                 arm: document.getElementById('spec-arm').value,
@@ -1063,6 +1193,7 @@
                 flex: document.getElementById('spec-flex').value,
                 grip: document.getElementById('spec-grip').value
             };
+            saveState();
             renderSpecs();
             closeEditModal('specs');
         }
@@ -1084,7 +1215,7 @@
         }
 
         function addEditWishlistRow() {
-            editWishlistData.push({ text: "", link: "" });
+            editWishlistData.push({ id: createId('wish'), text: "", link: "" });
             renderEditWishlistUI();
         }
 
@@ -1095,7 +1226,14 @@
 
         function saveWishlist() {
             // Filter out empty rows
-            wishlistData = editWishlistData.filter(i => i.text.trim() !== "");
+            appState.bag.wishlist = editWishlistData
+                .filter(i => i.text.trim() !== "")
+                .map(item => ({
+                    id: item.id,
+                    text: item.text,
+                    link: item.link
+                }));
+            saveState();
             renderWishlist();
             closeEditModal('wishlist');
         }
@@ -1104,6 +1242,7 @@
         renderClubs();
         renderSpecs();
         renderWishlist();
+        renderPassportTimeline();
 
         // ==========================================
         // ✨ GEMINI API INTEGRATIONS ✨

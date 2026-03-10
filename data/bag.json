@@ -1,0 +1,68 @@
+{
+  "clubs": [
+    {
+      "id": "club-driver",
+      "club": "Driver",
+      "carry": "160 – 200",
+      "contact": "Slight push/straight",
+      "isFav": false
+    },
+    {
+      "id": "club-4h",
+      "club": "4-Hybrid",
+      "carry": "130 – 160",
+      "contact": "Sweep (Forward ball)",
+      "isFav": false
+    },
+    {
+      "id": "club-7i",
+      "club": "7-Iron",
+      "carry": "110 – 130",
+      "contact": "Flush, middle face",
+      "isFav": true
+    },
+    {
+      "id": 1773180782781,
+      "club": "8-Iron",
+      "carry": "100-115",
+      "contact": "Clean downward strike",
+      "isFav": false
+    },
+    {
+      "id": "club-9i",
+      "club": "9-Iron",
+      "carry": "85 – 115",
+      "contact": "Clean downward strike",
+      "isFav": false
+    },
+    {
+      "id": "club-pw",
+      "club": "Pitching Wedge (PW)",
+      "carry": "80 – 110",
+      "contact": "Controlled approach",
+      "isFav": false
+    },
+    {
+      "id": 1773182749642,
+      "club": "Sand Wedge (SW)",
+      "carry": "60-90",
+      "contact": "Open face, bounce",
+      "isFav": false
+    }
+  ],
+  "specs": {
+    "height": "188",
+    "weight": "106",
+    "arm": "Right-Handed",
+    "shaft": "+0.5\" to +1\" (Future)",
+    "flex": "Stiff (S)",
+    "grip": "Jumbo"
+  },
+  "wishlist": [
+    {
+      "id": "wish-hybrid",
+      "text": "Callaway Strata ST 16pcs Set - Blue",
+      "link": "https://www.golfwarehouse.nz/products/callaway-mens-st-strata-ultimate-19-16-pc-package-set"
+    }
+  ]
+}

@@ -712,48 +712,75 @@
             return JSON.parse(JSON.stringify(defaultState));
         }
 
-        async function loadState() {
+        function mergeParsedIntoState(parsed, state) {
+            if (parsed.userPrefs) state.userPrefs = { ...state.userPrefs, ...parsed.userPrefs };
+            if (parsed.bag) {
+                if (Array.isArray(parsed.bag.clubs)) state.bag.clubs = parsed.bag.clubs;
+                if (parsed.bag.specs) state.bag.specs = { ...state.bag.specs, ...parsed.bag.specs };
+                if (Array.isArray(parsed.bag.wishlist)) state.bag.wishlist = parsed.bag.wishlist;
+            }
+            if (parsed.passport && Array.isArray(parsed.passport.rounds)) {
+                state.passport.rounds = parsed.passport.rounds;
+            }
+            if (parsed.topTracer && Array.isArray(parsed.topTracer.sessions)) {
+                state.topTracer.sessions = parsed.topTracer.sessions;
+            }
+        }
+
+        function loadStateFromStorage() {
             try {
-                const res = await fetch('/api/state', { cache: 'no-store' });
-                if (!res.ok) {
-                    throw new Error(`Failed to fetch state: ${res.status}`);
-                }
-                const parsed = await res.json();
-                // Very light merge to avoid losing new defaults
+                const raw = window.localStorage.getItem(STORAGE_KEY);
+                if (!raw) return cloneDefaultState();
+                const parsed = JSON.parse(raw);
                 const state = cloneDefaultState();
-                if (parsed.userPrefs) state.userPrefs = { ...state.userPrefs, ...parsed.userPrefs };
-                if (parsed.bag) {
-                    if (Array.isArray(parsed.bag.clubs)) state.bag.clubs = parsed.bag.clubs;
-                    if (parsed.bag.specs) state.bag.specs = { ...state.bag.specs, ...parsed.bag.specs };
-                    if (Array.isArray(parsed.bag.wishlist)) state.bag.wishlist = parsed.bag.wishlist;
-                }
-                if (parsed.passport && Array.isArray(parsed.passport.rounds)) {
-                    state.passport.rounds = parsed.passport.rounds;
-                }
-                if (parsed.topTracer && Array.isArray(parsed.topTracer.sessions)) {
-                    state.topTracer.sessions = parsed.topTracer.sessions;
-                }
+                mergeParsedIntoState(parsed, state);
                 return state;
             } catch (e) {
-                console.warn('Failed to load saved state from server, using defaults.', e);
+                console.warn('Failed to load saved state from localStorage, using defaults.', e);
                 return cloneDefaultState();
             }
         }
 
         let appState = cloneDefaultState();
+        let useApi = false;
 
-        async function saveState() {
-            try {
-                await fetch('/api/state', {
+        function saveState() {
+            if (useApi) {
+                fetch('/api/state', {
                     method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(appState)
-                });
-            } catch (e) {
-                console.warn('Failed to save state to server.', e);
+                }).catch((e) => console.warn('Failed to save state to API.', e));
+                return;
             }
+            try {
+                window.localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+            } catch (e) {
+                console.warn('Failed to save state to localStorage.', e);
+            }
+        }
+
+        async function initApp() {
+            try {
+                const res = await fetch('/api/state', { cache: 'no-store' });
+                if (res.ok) {
+                    const parsed = await res.json();
+                    const state = cloneDefaultState();
+                    mergeParsedIntoState(parsed, state);
+                    appState = state;
+                    useApi = true;
+                } else {
+                    throw new Error('API not ok');
+                }
+            } catch (e) {
+                appState = loadStateFromStorage();
+                useApi = false;
+            }
+            applyThemeFromState();
+            renderClubs();
+            renderSpecs();
+            renderWishlist();
+            renderPassportTimeline();
         }
 
         function createId(prefix) {
@@ -781,8 +808,6 @@
                 }
             }
         }
-
-        applyThemeFromState();
 
         themeToggle.addEventListener('click', () => {
             const isDark = html.classList.toggle('dark');
@@ -1246,16 +1271,7 @@
             closeEditModal('wishlist');
         }
 
-        async function initApp() {
-            appState = await loadState();
-            applyThemeFromState();
-            renderClubs();
-            renderSpecs();
-            renderWishlist();
-            renderPassportTimeline();
-        }
-
-        // Initialize dynamic renders on load
+        // Initialize: load state from API or localStorage, then render
         initApp();
 
         // ==========================================

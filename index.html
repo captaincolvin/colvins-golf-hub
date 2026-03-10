@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colvin's Golf Hub</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#1e90ff', // Dodger Blue
+                        primaryHover: '#187bcd',
+                        accent: '#2e8b57', // Putting Green
+                        lightBg: '#f8f9fa',
+                        darkBg: '#121212',
+                        darkCard: '#1e1e1e',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Smooth scrolling and transitions */
+        html { scroll-behavior: smooth; }
+        body { transition: background-color 0.3s ease, color 0.3s ease; }
+        .tab-content { animation: fadeIn 0.4s ease-in-out; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background-color: #1e90ff; border-radius: 4px; }
+        
+        /* Accordion hiding default arrow */
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+    </style>
+</head>
+<body class="bg-lightBg dark:bg-darkBg text-gray-800 dark:text-gray-200 font-sans min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-white dark:bg-darkCard shadow-sm backdrop-blur-md bg-opacity-90 dark:bg-opacity-90">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-golf-ball-tee text-primary text-2xl"></i>
+                    <span class="font-bold text-xl tracking-tight">Colvin's Golf Hub</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-300">
+                        <i class="fa-solid fa-moon text-xl dark:hidden" id="moon-icon"></i>
+                        <i class="fa-solid fa-sun text-xl hidden dark:block text-yellow-400" id="sun-icon"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Tabs Navigation -->
+            <div class="flex overflow-x-auto hide-scrollbar border-b border-gray-200 dark:border-gray-700">
+                <button onclick="switchTab('clubhouse')" id="btn-clubhouse" class="tab-btn active shrink-0 px-4 py-3 border-b-2 border-primary text-primary font-semibold transition-colors hover:text-primary whitespace-nowrap">
+                    <i class="fa-solid fa-house mr-2"></i>The Clubhouse
+                </button>
+                <button onclick="switchTab('swinglab')" id="btn-swinglab" class="tab-btn shrink-0 px-4 py-3 border-b-2 border-transparent text-gray-500 dark:text-gray-400 font-semibold transition-colors hover:text-primary whitespace-nowrap">
+                    <i class="fa-solid fa-video mr-2"></i>Swing Lab
+                </button>
+                <button onclick="switchTab('bag')" id="btn-bag" class="tab-btn shrink-0 px-4 py-3 border-b-2 border-transparent text-gray-500 dark:text-gray-400 font-semibold transition-colors hover:text-primary whitespace-nowrap">
+                    <i class="fa-solid fa-bag-shopping mr-2"></i>The Bag & Yardages
+                </button>
+                <button onclick="switchTab('passport')" id="btn-passport" class="tab-btn shrink-0 px-4 py-3 border-b-2 border-transparent text-gray-500 dark:text-gray-400 font-semibold transition-colors hover:text-primary whitespace-nowrap">
+                    <i class="fa-solid fa-map-location-dot mr-2"></i>Course Passport
+                </button>
+                <button onclick="switchTab('golfiq')" id="btn-golfiq" class="tab-btn shrink-0 px-4 py-3 border-b-2 border-transparent text-gray-500 dark:text-gray-400 font-semibold transition-colors hover:text-primary whitespace-nowrap">
+                    <i class="fa-solid fa-brain mr-2"></i>Golf IQ
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+
+        <!-- TAB 1: THE CLUBHOUSE -->
+        <section id="clubhouse" class="tab-content block">
+            <header class="mb-8">
+                <h1 class="text-3xl font-bold mb-2">Welcome back, Colvin! 🏌️‍♂️</h1>
+                <p class="text-gray-500 dark:text-gray-400">Here's your quick glance overview for the week.</p>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Highlight Card -->
+                <div class="col-span-1 md:col-span-2 bg-primary text-white rounded-2xl p-6 shadow-lg relative overflow-hidden group hover:shadow-primary/50 transition-shadow">
+                    <div class="absolute -right-4 -bottom-4 opacity-20 transform group-hover:scale-110 transition-transform duration-500">
+                        <i class="fa-solid fa-bullseye text-9xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold mb-4 relative z-10">🎯 Current Focus: Solid Beginner Phase</h2>
+                    <ul class="space-y-3 relative z-10 text-lg">
+                        <li>✔️ Aiming for 50%+ straight drives at the range.</li>
+                        <li>✔️ Dialing in the Bump-Turn-Swing sequence.</li>
+                        <li>✔️ Smoothing out the 7-iron sweeps without digging.</li>
+                    </ul>
+                    <div class="mt-6 inline-block bg-white text-primary px-4 py-2 rounded-lg font-bold shadow-sm relative z-10">
+                        Progress: 70% to Next Level
+                    </div>
+                </div>
+
+                <!-- Weather & Location -->
+                <div class="bg-white dark:bg-darkCard rounded-2xl p-6 shadow-md hover:-translate-y-1 transition-transform border border-gray-100 dark:border-gray-800">
+                    <div class="flex justify-between items-start mb-4">
+                        <h2 class="font-bold text-lg">Next Session Prep</h2>
+                        <i class="fa-solid fa-cloud-sun text-2xl text-yellow-500"></i>
+                    </div>
+                    <div class="text-3xl font-bold mb-1">22°C</div>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">Auckland, NZ - Ideal Range Weather</p>
+                    
+                    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 text-sm">
+                        <p class="font-semibold text-primary mb-1">📍 Local Spot:</p>
+                        <p>Chamberlain Park or North Shore (Near Hobsonville)</p>
+                    </div>
+                </div>
+
+                <!-- Swing Thought -->
+                <div class="bg-white dark:bg-darkCard rounded-2xl p-6 shadow-md hover:-translate-y-1 transition-transform border border-gray-100 dark:border-gray-800 flex flex-col justify-between">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="font-bold text-lg text-accent"><i class="fa-regular fa-lightbulb mr-2"></i>Thought of the Day</h2>
+                        <button onclick="generateSwingThought()" class="text-xs bg-primary/10 text-primary hover:bg-primary/20 px-2 py-1 rounded transition-colors font-semibold" title="Generate new thought with AI">✨ AI Generate</button>
+                    </div>
+                    <blockquote id="swing-thought-text" class="italic text-gray-600 dark:text-gray-300 border-l-4 border-accent pl-4 py-1 text-lg">
+                        "Smooth and easy — let the club do the work! Dark shirt, bright future."
+                    </blockquote>
+                </div>
+
+                <!-- Quick Logging -->
+                <div class="md:col-span-2 bg-white dark:bg-darkCard rounded-2xl p-6 shadow-md border border-gray-100 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div>
+                        <h2 class="font-bold text-lg mb-1">Quick Logging</h2>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">Log your latest course scores or TopTracer range data.</p>
+                    </div>
+                    <div class="flex space-x-3 w-full sm:w-auto">
+                        <button onclick="openModal('course')" class="flex-1 sm:flex-none bg-primary hover:bg-primaryHover text-white px-4 py-2 rounded-xl font-semibold shadow-md transition-colors flex items-center justify-center">
+                            <i class="fa-solid fa-flag mr-2"></i> Course
+                        </button>
+                        <button onclick="openModal('toptracer')" class="flex-1 sm:flex-none bg-accent hover:bg-green-700 text-white px-4 py-2 rounded-xl font-semibold shadow-md transition-colors flex items-center justify-center">
+                            <i class="fa-solid fa-radar-base mr-2"></i> TopTracer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: SWING LAB -->
+        <section id="swinglab" class="tab-content hidden">
+            <header class="mb-8">
+                <h1 class="text-3xl font-bold mb-2">Swing Lab & Coaching 🛠️</h1>
+                <p class="text-gray-500 dark:text-gray-400">Your personal repository for mechanical fixes and drills.</p>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Video Placeholder & Analysis -->
+                <div class="bg-white dark:bg-darkCard rounded-2xl p-6 shadow-md">
+                    <div class="bg-gray-200 dark:bg-gray-800 aspect-video rounded-xl flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 mb-6 relative overflow-hidden group">
+                        <i class="fa-solid fa-play-circle text-6xl mb-2 group-hover:text-primary transition-colors cursor-pointer"></i>
+                        <p>Latest Driver Analysis (Oct 2025)</p>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">Driver Mechanics: Slice Prevention</h3>
+                    <ul class="space-y-2">
+                        <li>🛑 <strong>The Issue:</strong> Over-the-Top Path (Outside-in slice).</li>
+                        <li>💡 <strong>The Fix:</strong> "Pump Drill" - Start downswing by bumping hips toward target, keeping back to target longer.</li>
+                        <li>⛳ <strong>Goal:</strong> Cut the big right-to-left slices in half over 20 balls.</li>
+                    </ul>
+                </div>
+
+                <!-- Drills & Checklists -->
+                <div class="space-y-6">
+                    <!-- Iron Card -->
+                    <div class="bg-white dark:bg-darkCard rounded-2xl p-6 shadow-md border-l-4 border-primary hover:-translate-y-1 transition-transform">
+                        <h3 class="font-bold text-lg mb-3">7-Iron Fundamentals</h3>
+                        <ul class="space-y-2 text-gray-700 dark:text-gray-300">
+                            <li>🌱 <strong>Tempo:</strong> "1-and-2" smooth backswing count.</li>
+                            <li>🌱 <strong>Impact:</strong> "Sweep the grass" - imagine brushing the turf after the ball.</li>
+                            <li>🌱 <strong>Power:</strong> "Bump-turn-swing" sequence. Finish balanced and tall!</li>
+                        </ul>
+                    </div>
+
+                    <!-- Grip Card -->
+                    <div class="bg-white dark:bg-darkCard rounded-2xl p-6 shadow-md border-l-4 border-accent hover:-translate-y-1 transition-transform">
+                        <h3 class="font-bold text-lg mb-3">Gentle Grip Checklist</h3>
+                        <ul class="space-y-2 text-gray-700 dark:text-gray-300">
+                            <li>🖐️ <strong>Pressure:</strong> 4-5 out of 10. Think "Toothpaste tube".</li>
+                            <li>🖐️ <strong>Placement:</strong> Base of the fingers, not deep in the palm.</li>
+                            <li>🖐️ <strong>Alignment:</strong> The 'V' points to the right shoulder.</li>
+                        </ul>
+                        <div class="mt-4 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                            <div class="bg-accent h-2.5 rounded-full" style="width: 85%"></div>
+                        </div>
+                        <p class="text-xs text-right mt-1 text-gray-500">Drill Mastery: 85%</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ✨ AI Swing Coach -->
+            <div class="mt-8 bg-gradient-to-r from-primary/10 to-accent/10 dark:from-primary/20 dark:to-accent/20 rounded-2xl p-6 shadow-md border border-primary/20 relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 opacity-10 text-primary">
+                    <i class="fa-solid fa-robot text-9xl"></i>
+                </div>
+                <div class="relative z-10">
+                    <h3 class="font-bold text-xl mb-2 flex items-center"><i class="fa-solid fa-brain mr-2 text-primary"></i> ✨ AI Swing Diagnoser</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 max-w-2xl">Having trouble at the range? Describe what your ball is doing, and your AI Coach will give you an instant drill tailored for a tall beginner.</p>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <input type="text" id="ai-symptom-input" placeholder="e.g., 'I keep topping the ball with my 4 hybrid'" class="flex-grow bg-white dark:bg-darkCard border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary focus:outline-none shadow-sm">
+                        <button onclick="diagnoseSwing()" class="bg-primary hover:bg-primaryHover text-white px-6 py-3 rounded-xl font-bold transition-colors shadow-md flex items-center justify-center whitespace-nowrap">
+                            Ask Coach
+                        </button>
+                    </div>
+                    <div id="ai-coach-output" class="mt-4 hidden bg-white dark:bg-darkCard p-5 rounded-xl border border-gray-200 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300 shadow-inner">
+                        <!-- AI response will appear here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: THE BAG -->
+        <section id="bag" class="tab-content hidden">
+            <header class="mb-8">
+                <h1 class="text-3xl font-bold mb-2">The Bag & Yardages 🎒</h1>
+                <p class="text-gray-500 dark:text-gray-400">Current specs tailored for 188cm height and metric yardages.</p>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Yardage Table -->
+                <div class="lg:col-span-2 bg-white dark:bg-darkCard rounded-2xl shadow-md overflow-hidden">
+                    <div class="bg-primary p-4 text-white flex justify-between items-center">
+                        <h3 class="font-bold text-lg"><i class="fa-solid fa-ruler-horizontal mr-2"></i> Carry Distances</h3>
+                        <button onclick="openEditModal('clubs')" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-lg text-sm font-semibold transition-colors"><i class="fa-solid fa-pen mr-1"></i> Edit Bag</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-sm uppercase tracking-wider">
+                                    <th class="p-4 font-semibold border-b dark:border-gray-700">Club</th>
+                                    <th class="p-4 font-semibold border-b dark:border-gray-700">Carry Range (m)</th>
+                                    <th class="p-4 font-semibold border-b dark:border-gray-700">Target Contact</th>
+                                </tr>
+                            </thead>
+                            <tbody id="carry-table-body" class="divide-y divide-gray-100 dark:divide-gray-800">
+                                <!-- Dynamically populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Specs & Wishlist -->
+                <div class="space-y-6">
+                    <div class="bg-white dark:bg-darkCard rounded-2xl p-6 shadow-md">
+                        <div class="flex justify-between items-center mb-4 border-b pb-2 dark:border-gray-700">
+                            <h3 class="font-bold text-lg"><i class="fa-solid fa-wrench text-gray-500 mr-2"></i> Fitting Specs</h3>
+                            <button onclick="openEditModal('specs')" class="text-primary hover:text-primaryHover transition-colors"><i class="fa-solid fa-pen"></i></button>
+                        </div>
+                        <ul id="specs-list" class="space-y-3">
+                            <!-- Dynamically populated by JS -->
+                        </ul>
+                    </div>
+
+                    <div class="bg-white dark:bg-darkCard rounded-2xl p-6 shadow-md">
+                        <div class="flex justify-between items-center mb-4 border-b pb-2 dark:border-gray-700">
+                            <h3 class="font-bold text-lg"><i class="fa-solid fa-cart-shopping text-gray-500 mr-2"></i> Gear Wishlist</h3>
+                            <button onclick="openEditModal('wishlist')" class="text-primary hover:text-primaryHover transition-colors"><i class="fa-solid fa-pen"></i></button>
+                        </div>
+                        <ul id="wishlist-list" class="space-y-3">
+                            <!-- Dynamically populated by JS -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: PASSPORT -->
+        <section id="passport" class="tab-content hidden">
+            <header class="mb-8">
+                <h1 class="text-3xl font-bold mb-2">Course Passport 🗺️</h1>
+                <p class="text-gray-500 dark:text-gray-400">Auckland locations, round history, and scoring milestones.</p>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Locations -->
+                <div class="space-y-6">
+                    <h2 class="text-xl font-bold">Beginner-Friendly Destinations</h2>
+                    
+                    <div class="bg-white dark:bg-darkCard rounded-2xl p-6 shadow-md flex gap-4 hover:-translate-y-1 transition-transform border border-gray-100 dark:border-gray-800">
+                        <div class="bg-primary/10 text-primary p-4 rounded-xl flex items-center justify-center">
+                            <i class="fa-solid fa-flag text-3xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg">Golf Warehouse Ellerslie</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">9-Hole Pitch & Putt • Par 27</p>
+                            <p class="text-sm">Great for irons. Approx <span class="font-bold text-accent">NZD 40-60</span> with club rentals.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-darkCard rounded-2xl p-6 shadow-md flex gap-4 hover:-translate-y-1 transition-transform border border-gray-100 dark:border-gray-800">
+                        <div class="bg-primary/10 text-primary p-4 rounded-xl flex items-center justify-center">
+                            <i class="fa-solid fa-tree text-3xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg">Chamberlain Park</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Public 18 Holes • Mt Roskill</p>
+                            <p class="text-sm">Excellent value. Has a great shop for club adjustments.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-darkCard rounded-2xl p-6 shadow-md flex gap-4 hover:-translate-y-1 transition-transform border border-gray-100 dark:border-gray-800">
+                        <div class="bg-primary/10 text-primary p-4 rounded-xl flex items-center justify-center">
+                            <i class="fa-solid fa-water text-3xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg">Akarana Golf Club</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Royal Auckland Area</p>
+                            <p class="text-sm">Flat parkland, super friendly. Approx <span class="font-bold text-accent">NZD 50-80</span> for 18.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Score Timeline -->
+                <div>
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold">Round History & Milestones</h2>
+                        <div class="flex items-center space-x-3">
+                            <button id="btn-delete-selected" onclick="deleteSelectedHistory()" class="hidden bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm font-semibold transition-colors">Delete Selected</button>
+                            <button id="btn-toggle-delete" onclick="toggleDeleteMode()" class="text-gray-400 hover:text-red-500 transition-colors" title="Toggle Delete Mode">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="passport-timeline" class="relative border-l-2 border-primary ml-4 space-y-8 pl-8 pb-4">
+                        
+                        <div class="relative deletable-entry transition-all duration-300">
+                            <div class="absolute -left-[41px] bg-primary text-white h-8 w-8 rounded-full flex items-center justify-center border-4 border-lightBg dark:border-darkBg shadow">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </div>
+                            <div class="bg-white dark:bg-darkCard p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 relative">
+                                <input type="checkbox" class="delete-checkbox hidden absolute top-5 right-5 w-5 h-5 accent-red-500 cursor-pointer">
+                                <div class="flex justify-between items-center mb-2 pr-8">
+                                    <h3 class="font-bold text-primary">Chamberlain Park</h3>
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-gray-500">Maiden Round</span>
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">
+                                    ⛳ 4 Holes Played (Par 4,4,4,3) <br>
+                                    📊 Score: <span class="font-bold">61 Gross / 37 Net</span> <br>
+                                    Notes: Double-bogey or better net on three holes. Managed distances well!
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="relative deletable-entry transition-all duration-300">
+                            <div class="absolute -left-[41px] bg-primary text-white h-8 w-8 rounded-full flex items-center justify-center border-4 border-lightBg dark:border-darkBg shadow">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </div>
+                            <div class="bg-white dark:bg-darkCard p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 relative">
+                                <input type="checkbox" class="delete-checkbox hidden absolute top-5 right-5 w-5 h-5 accent-red-500 cursor-pointer">
+                                <div class="flex justify-between items-center mb-2 pr-8">
+                                    <h3 class="font-bold text-primary">Golf Warehouse Ellerslie</h3>
+                                    <span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-gray-500">Pitch & Putt</span>
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">
+                                    ⛳ 9 Holes Played (Par 27) <br>
+                                    ⏱️ Pace: 52 minutes <br>
+                                    Notes: Clean irons on 1 and 2. Finished every hole without blow-ups!
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="relative">
+                            <div class="absolute -left-[41px] bg-gray-300 dark:bg-gray-700 text-white h-8 w-8 rounded-full flex items-center justify-center border-4 border-lightBg dark:border-darkBg">
+                                <i class="fa-solid fa-lock text-xs"></i>
+                            </div>
+                            <div class="opacity-60">
+                                <h3 class="font-bold text-gray-500">Next Milestone</h3>
+                                <p class="text-sm text-gray-500">First Official Full 18 Holes & starting Handicap tracking via Golf NZ.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: GOLF IQ -->
+        <section id="golfiq" class="tab-content hidden max-w-4xl mx-auto">
+            <header class="mb-8 text-center">
+                <h1 class="text-3xl font-bold mb-2">Golf IQ Knowledge Base 🧠</h1>
+                <p class="text-gray-500 dark:text-gray-400">Glossary and answers to the wider world of golf.</p>
+            </header>
+
+            <div class="space-y-4">
+                
+                <details class="group bg-white dark:bg-darkCard rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden" open>
+                    <summary class="flex justify-between items-center font-bold cursor-pointer list-none p-5 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <span class="flex items-center"><i class="fa-solid fa-trophy text-primary w-6 mr-2"></i> Tour Formats: PGA vs. LIV</span>
+                        <span class="transition group-open:rotate-180">
+                            <i class="fa-solid fa-chevron-down text-gray-400"></i>
+                        </span>
+                    </summary>
+                    <div class="p-5 text-gray-600 dark:text-gray-300 text-sm leading-relaxed border-t border-gray-100 dark:border-gray-700">
+                        <ul class="space-y-3">
+                            <li>📺 <strong>Event Length:</strong> PGA Tour is usually 72 holes (4 days). LIV Golf is generally 54 holes (3 days, LIV = 54 in Roman numerals), though newer events like Hong Kong 2026 introduced 72-hole formats.</li>
+                            <li>📺 <strong>Field Size & Cuts:</strong> PGA has big fields (~150) and cuts half the players after day 2. LIV has smaller fields (~54) and no cuts.</li>
+                            <li>📺 <strong>Tee Times:</strong> PGA uses traditional 1st/10th tee starts. LIV uses shotgun starts (everyone starts at once on different holes).</li>
+                            <li>📺 <strong>Teams:</strong> LIV includes a team competition element alongside individual scoring.</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="group bg-white dark:bg-darkCard rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold cursor-pointer list-none p-5 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <span class="flex items-center"><i class="fa-solid fa-calculator text-primary w-6 mr-2"></i> Scoring & Handicaps (WHS)</span>
+                        <span class="transition group-open:rotate-180">
+                            <i class="fa-solid fa-chevron-down text-gray-400"></i>
+                        </span>
+                    </summary>
+                    <div class="p-5 text-gray-600 dark:text-gray-300 text-sm leading-relaxed border-t border-gray-100 dark:border-gray-700">
+                        <p class="mb-3">A handicap (Handicap Index) levels the playing field, allowing beginners to compete fairly against pros.</p>
+                        <ul class="space-y-3">
+                            <li>📉 <strong>Max Handicap:</strong> 54.0. Beginners usually start here or around 30+.</li>
+                            <li>📉 <strong>How it works:</strong> If you are a 30 handicap and shoot 102 (Gross), your net score is 72. </li>
+                            <li>📉 <strong>Tracking in NZ:</strong> Official handicaps require joining a club and posting scores from full rounds via Golf NZ. (Save TheGrint app for later!)</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="group bg-white dark:bg-darkCard rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+                    <summary class="flex justify-between items-center font-bold cursor-pointer list-none p-5 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <span class="flex items-center"><i class="fa-solid fa-hockey-puck text-primary w-6 mr-2"></i> Equipment Glossary: Shaft Flex</span>
+                        <span class="transition group-open:rotate-180">
+                            <i class="fa-solid fa-chevron-down text-gray-400"></i>
+                        </span>
+                    </summary>
+                    <div class="p-5 text-gray-600 dark:text-gray-300 text-sm leading-relaxed border-t border-gray-100 dark:border-gray-700">
+                        <p class="mb-3">Shaft flex indicates how much the club bends during the swing. Essential for matching swing speed.</p>
+                        <ul class="space-y-2">
+                            <li>📏 <strong>L (Ladies):</strong> Very flexible, < 75 mph.</li>
+                            <li>📏 <strong>A (Senior):</strong> Soft, 75–85 mph.</li>
+                            <li>📏 <strong>R (Regular):</strong> Medium, 85–95 mph. <strong>*Recommended starting point for you (188cm male beginner).*</strong></li>
+                            <li>📏 <strong>S (Stiff):</strong> Firmer, 95–110 mph.</li>
+                            <li>📏 <strong>X (Extra Stiff):</strong> Very firm, > 110 mph.</li>
+                        </ul>
+                    </div>
+                </details>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <div id="logging-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-darkCard rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 relative">
+            
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 dark:hover:text-white">
+                <i class="fa-solid fa-xmark text-2xl"></i>
+            </button>
+
+            <div class="p-6 md:p-8">
+                <h2 id="modal-title" class="text-2xl font-bold mb-6 border-b pb-2 dark:border-gray-700 text-primary">Log Session</h2>
+                
+                <!-- Course Form -->
+                <form id="course-form" class="hidden space-y-4" onsubmit="handleCourseSubmit(event)">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Course Name</label>
+                            <input type="text" id="course-name" required placeholder="e.g. Chamberlain Park" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">No. of Holes</label>
+                            <select id="course-holes" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                                <option value="9 Holes (Front 9)">9 Holes (Front 9)</option>
+                                <option value="9 Holes (Back 9)">9 Holes (Back 9)</option>
+                                <option value="18 Holes">18 Holes</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Holes Par Count</label>
+                            <input type="number" id="course-par" required placeholder="e.g. 34" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">My Stroke Score</label>
+                            <input type="number" id="course-score" required placeholder="e.g. 61" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Notes / Key Takeaways</label>
+                        <textarea id="course-notes" rows="3" placeholder="Felt great with the 7-iron..." class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:outline-none"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-primary hover:bg-primaryHover text-white font-bold py-3 rounded-lg transition-colors">Save Course Score</button>
+                </form>
+
+                <!-- TopTracer Form -->
+                <form id="toptracer-form" class="hidden space-y-4" onsubmit="handleTopTracerSubmit(event)">
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div class="col-span-2 md:col-span-1">
+                            <label class="block text-sm font-semibold mb-1">Club Used</label>
+                            <select id="tt-club" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                                <!-- Dynamically populated by JS -->
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Shots Tracked</label>
+                            <input type="number" id="tt-shots" required value="10" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Flat Carry (m)</label>
+                            <input type="number" id="tt-carry" required placeholder="125" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Total Distance (m)</label>
+                            <input type="number" id="tt-total" required placeholder="135" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Ball Speed</label>
+                            <input type="text" id="tt-speed" placeholder="e.g. 45 m/s" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Launch Angle (°)</label>
+                            <input type="number" id="tt-launch" placeholder="16" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Height (m)</label>
+                            <input type="number" id="tt-height" placeholder="20" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Landing Angle (°)</label>
+                            <input type="number" id="tt-landing" placeholder="40" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Hang Time (s)</label>
+                            <input type="number" step="0.1" id="tt-hang" placeholder="4.5" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Curve (m)</label>
+                            <input type="number" id="tt-curve" placeholder="5" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Offline (m)</label>
+                            <input type="number" id="tt-offline" placeholder="-3" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-accent hover:bg-green-700 text-white font-bold py-3 mt-4 rounded-lg transition-colors">Save TopTracer Data</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals for Editing Bag & Yardages -->
+    <!-- Edit Clubs Modal -->
+    <div id="edit-clubs-modal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-darkCard rounded-2xl shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col transform scale-95 transition-transform duration-300 relative">
+            <div class="p-6 md:p-8 flex-grow overflow-y-auto">
+                <div class="flex justify-between items-center mb-6 border-b pb-2 dark:border-gray-700">
+                    <h2 class="text-2xl font-bold text-primary"><i class="fa-solid fa-golf-club mr-2"></i> Manage Clubs</h2>
+                    <button onclick="closeEditModal('clubs')" class="text-gray-500 hover:text-gray-800 dark:hover:text-white"><i class="fa-solid fa-xmark text-2xl"></i></button>
+                </div>
+                <div id="edit-clubs-container" class="space-y-4 mb-4">
+                    <!-- Populated by JS -->
+                </div>
+                <button onclick="addEditClubRow()" class="w-full border-2 border-dashed border-primary text-primary hover:bg-primary/10 font-bold py-3 rounded-lg transition-colors mb-4"><i class="fa-solid fa-plus mr-2"></i> Add Club</button>
+                <button onclick="saveClubs()" class="w-full bg-primary hover:bg-primaryHover text-white font-bold py-3 rounded-lg transition-colors">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Specs Modal -->
+    <div id="edit-specs-modal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-darkCard rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] flex flex-col transform scale-95 transition-transform duration-300 relative">
+            <div class="p-6 md:p-8 flex-grow overflow-y-auto">
+                <div class="flex justify-between items-center mb-6 border-b pb-2 dark:border-gray-700">
+                    <h2 class="text-2xl font-bold text-primary"><i class="fa-solid fa-wrench mr-2"></i> Edit Specs</h2>
+                    <button onclick="closeEditModal('specs')" class="text-gray-500 hover:text-gray-800 dark:hover:text-white"><i class="fa-solid fa-xmark text-2xl"></i></button>
+                </div>
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Height (cm)</label>
+                            <input type="number" id="spec-height" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Weight (kg)</label>
+                            <input type="number" id="spec-weight" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Arm Preference</label>
+                        <select id="spec-arm" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                            <option value="Right-Handed">Right-Handed</option>
+                            <option value="Left-Handed">Left-Handed</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Shaft Length</label>
+                        <input type="text" id="spec-shaft" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Flex Profile</label>
+                        <select id="spec-flex" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                            <option value="Ladies (L)">Ladies (L)</option>
+                            <option value="Senior (A)">Senior (A)</option>
+                            <option value="Regular (R)">Regular (R)</option>
+                            <option value="Stiff (S)">Stiff (S)</option>
+                            <option value="Extra Stiff (X)">Extra Stiff (X)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Grips</label>
+                        <select id="spec-grip" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none">
+                            <option value="Standard">Standard</option>
+                            <option value="Midsize">Midsize</option>
+                            <option value="Jumbo">Jumbo</option>
+                            <option value="Undersize">Undersize</option>
+                            <option value="Soft / Winn">Soft / Winn</option>
+                            <option value="Cord / Firm">Cord / Firm</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="saveSpecs()" class="w-full bg-primary hover:bg-primaryHover text-white font-bold py-3 mt-6 rounded-lg transition-colors">Save Specs</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Wishlist Modal -->
+    <div id="edit-wishlist-modal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-darkCard rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col transform scale-95 transition-transform duration-300 relative">
+            <div class="p-6 md:p-8 flex-grow overflow-y-auto">
+                <div class="flex justify-between items-center mb-6 border-b pb-2 dark:border-gray-700">
+                    <h2 class="text-2xl font-bold text-primary"><i class="fa-solid fa-cart-shopping mr-2"></i> Edit Wishlist</h2>
+                    <button onclick="closeEditModal('wishlist')" class="text-gray-500 hover:text-gray-800 dark:hover:text-white"><i class="fa-solid fa-xmark text-2xl"></i></button>
+                </div>
+                <div id="edit-wishlist-container" class="space-y-4 mb-4">
+                    <!-- Populated by JS -->
+                </div>
+                <button onclick="addEditWishlistRow()" class="w-full border-2 border-dashed border-primary text-primary hover:bg-primary/10 font-bold py-3 rounded-lg transition-colors mb-4"><i class="fa-solid fa-plus mr-2"></i> Add Item</button>
+                <button onclick="saveWishlist()" class="w-full bg-primary hover:bg-primaryHover text-white font-bold py-3 rounded-lg transition-colors">Save Wishlist</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-darkCard border-t border-gray-200 dark:border-gray-800 mt-12 py-6 text-center text-sm text-gray-500">
+        <p>Built for Colvin Cooper's Golf Journey • Hobsonville, Auckland</p>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Dark Mode Toggle Logic
+        const html = document.documentElement;
+        const themeToggle = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+
+        // Check system preference on load
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            html.classList.add('dark');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+        });
+
+        // Tab Navigation Logic
+        function switchTab(tabId) {
+            // Hide all contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('block');
+            });
+
+            // Reset all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('border-primary', 'text-primary');
+                btn.classList.add('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+            });
+
+            // Show selected content
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById(tabId).classList.add('block');
+
+            // Highlight selected button
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+            activeBtn.classList.add('border-primary', 'text-primary');
+        }
+
+        // Modal Logic
+        const modal = document.getElementById('logging-modal');
+        const modalInner = modal.querySelector('div');
+        const courseForm = document.getElementById('course-form');
+        const toptracerForm = document.getElementById('toptracer-form');
+        const modalTitle = document.getElementById('modal-title');
+
+        function openModal(type) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            // Small timeout to allow display:block to apply before changing opacity for transition
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalInner.classList.remove('scale-95');
+                modalInner.classList.add('scale-100');
+            }, 10);
+
+            if (type === 'course') {
+                modalTitle.innerHTML = '<i class="fa-solid fa-flag mr-2"></i> Log Course Score';
+                modalTitle.className = 'text-2xl font-bold mb-6 border-b pb-2 dark:border-gray-700 text-primary';
+                courseForm.classList.remove('hidden');
+                toptracerForm.classList.add('hidden');
+            } else {
+                modalTitle.innerHTML = '<i class="fa-solid fa-radar-base mr-2"></i> Log TopTracer Data';
+                modalTitle.className = 'text-2xl font-bold mb-6 border-b pb-2 dark:border-gray-700 text-accent';
+                toptracerForm.classList.remove('hidden');
+                courseForm.classList.add('hidden');
+            }
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            modalInner.classList.remove('scale-100');
+            modalInner.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        // Form Submit Handlers
+        function handleCourseSubmit(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('course-name').value;
+            const holes = document.getElementById('course-holes').value;
+            const par = document.getElementById('course-par').value;
+            const score = document.getElementById('course-score').value;
+            const notes = document.getElementById('course-notes').value;
+
+            // Reflect in Passport Timeline
+            const timeline = document.getElementById('passport-timeline');
+            const newEntry = document.createElement('div');
+            newEntry.className = 'relative animate-[fadeIn_0.5s_ease-in-out] deletable-entry transition-all duration-300';
+            newEntry.innerHTML = `
+                <div class="absolute -left-[41px] bg-primary text-white h-8 w-8 rounded-full flex items-center justify-center border-4 border-lightBg dark:border-darkBg shadow">
+                    <i class="fa-solid fa-flag text-xs"></i>
+                </div>
+                <div class="bg-white dark:bg-darkCard p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 relative">
+                    <input type="checkbox" class="delete-checkbox hidden absolute top-5 right-5 w-5 h-5 accent-red-500 cursor-pointer">
+                    <div class="flex justify-between items-center mb-2 pr-8">
+                        <h3 class="font-bold text-primary">${name}</h3>
+                        <span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-gray-500">Just Logged</span>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-300">
+                        ⛳ ${holes} (Par ${par}) <br>
+                        📊 Score: <span class="font-bold">${score} Gross</span> <br>
+                        Notes: ${notes || 'No notes provided.'}
+                    </p>
+                </div>
+            `;
+            timeline.insertBefore(newEntry, timeline.children[0]);
+            
+            closeModal();
+            e.target.reset();
+            
+            // Optional: Auto-switch to passport tab
+            switchTab('passport');
+        }
+
+        function handleTopTracerSubmit(e) {
+            e.preventDefault();
+
+            const club = document.getElementById('tt-club').value;
+            const carry = document.getElementById('tt-carry').value;
+            
+            // Reflect in Bag Yardages dynamically
+            const clubIndex = bagData.findIndex(c => c.club === club);
+            if (clubIndex !== -1) {
+                bagData[clubIndex].carry = carry;
+                renderClubs(); // Re-render table
+                
+                // Highlight the updated cell
+                setTimeout(() => {
+                    const row = document.querySelector(`tr[data-club-id="${bagData[clubIndex].id}"]`);
+                    if(row) {
+                        const cell = row.children[1];
+                        cell.innerHTML = `~ ${carry} m <span class="text-xs text-accent ml-2">(Updated)</span>`;
+                        cell.classList.add('bg-green-100', 'dark:bg-green-900/30', 'transition-colors', 'duration-500');
+                        setTimeout(() => {
+                            cell.classList.remove('bg-green-100', 'dark:bg-green-900/30');
+                            renderClubs(); // Reset to normal view
+                        }, 2500);
+                    }
+                }, 50);
+            }
+
+            closeModal();
+            e.target.reset();
+
+            // Optional: Auto-switch to Bag tab
+            switchTab('bag');
+        }
+
+        // Delete History Logic
+        let isDeleteMode = false;
+
+        function toggleDeleteMode() {
+            isDeleteMode = !isDeleteMode;
+            const checkboxes = document.querySelectorAll('.delete-checkbox');
+            const deleteBtn = document.getElementById('btn-delete-selected');
+            const toggleBtn = document.getElementById('btn-toggle-delete');
+
+            if (isDeleteMode) {
+                checkboxes.forEach(cb => cb.classList.remove('hidden'));
+                deleteBtn.classList.remove('hidden');
+                toggleBtn.classList.add('text-red-500');
+                toggleBtn.classList.remove('text-gray-400');
+            } else {
+                checkboxes.forEach(cb => {
+                    cb.classList.add('hidden');
+                    cb.checked = false; // Reset selection on cancel
+                });
+                deleteBtn.classList.add('hidden');
+                toggleBtn.classList.remove('text-red-500');
+                toggleBtn.classList.add('text-gray-400');
+            }
+        }
+
+        function deleteSelectedHistory() {
+            const checkedBoxes = document.querySelectorAll('.delete-checkbox:checked');
+            if (checkedBoxes.length === 0) {
+                toggleDeleteMode(); // Exit if nothing was selected
+                return;
+            }
+            
+            checkedBoxes.forEach(cb => {
+                const entry = cb.closest('.deletable-entry');
+                if (entry) {
+                    entry.classList.add('opacity-0', 'scale-95'); // Fade out effect
+                    setTimeout(() => entry.remove(), 300);
+                }
+            });
+
+            // Turn off delete mode after deleting
+            setTimeout(toggleDeleteMode, 300);
+        }
+
+        // ==========================================
+        // 🎒 DYNAMIC BAG & YARDAGES DATA LOGIC 🎒
+        // ==========================================
+
+        const targetContactMap = {
+            "Driver": "Slight push/straight",
+            "3-Wood": "Sweep (Forward ball)",
+            "5-Wood": "Sweep (Forward ball)",
+            "3-Hybrid": "Sweep (Forward ball)",
+            "4-Hybrid": "Sweep (Forward ball)",
+            "5-Hybrid": "Sweep (Forward ball)",
+            "4-Iron": "Slight downward strike",
+            "5-Iron": "Slight downward strike",
+            "6-Iron": "Clean downward strike",
+            "7-Iron": "Flush, middle face",
+            "8-Iron": "Clean downward strike",
+            "9-Iron": "Clean downward strike",
+            "Pitching Wedge (PW)": "Controlled approach",
+            "Sand Wedge (SW)": "Open face, bounce",
+            "Lob Wedge (LW)": "High, soft landing",
+            "Putter": "Smooth pendulum"
+        };
+
+        // Initial State
+        let bagData = [
+            { id: 1, club: "Driver", carry: "160 – 200", contact: targetContactMap["Driver"], isFav: false },
+            { id: 2, club: "4-Hybrid", carry: "130 – 160", contact: targetContactMap["4-Hybrid"], isFav: false },
+            { id: 3, club: "7-Iron", carry: "110 – 130", contact: targetContactMap["7-Iron"], isFav: true },
+            { id: 4, club: "9-Iron", carry: "85 – 115", contact: targetContactMap["9-Iron"], isFav: false },
+            { id: 5, club: "Pitching Wedge (PW)", carry: "80 – 110", contact: targetContactMap["Pitching Wedge (PW)"], isFav: false }
+        ];
+
+        let specsData = {
+            height: "188", weight: "90", arm: "Right-Handed", 
+            shaft: "+0.5\" to +1\" (Future)", flex: "Regular (R)", grip: "Soft / Winn"
+        };
+
+        let wishlistData = [
+            { text: "Used 4 or 5 Hybrid (~NZD 50-100)", link: "https://www.trademe.co.nz/" },
+            { text: "Cavity-Back Iron Set", link: "" }
+        ];
+
+        let editBagData = [];
+        let editWishlistData = [];
+
+        // --- Render Functions ---
+        function renderClubs() {
+            const tbody = document.getElementById('carry-table-body');
+            tbody.innerHTML = bagData.map(item => `
+                <tr data-club-id="${item.id}" class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors ${item.isFav ? 'bg-blue-50/30 dark:bg-blue-900/10' : ''}">
+                    <td class="p-4 font-bold flex items-center">
+                        ${item.isFav ? '<i class="fa-solid fa-star text-yellow-400 mr-2 text-xs"></i>' : ''} ${item.club}
+                    </td>
+                    <td class="p-4 text-primary font-semibold">${item.carry} ${item.carry.includes('m') ? '' : 'm'}</td>
+                    <td class="p-4">${item.contact}</td>
+                </tr>
+            `).join('');
+
+            // Update TopTracer Dropdown
+            const ttDropdown = document.getElementById('tt-club');
+            ttDropdown.innerHTML = bagData.map(item => `<option value="${item.club}">${item.club}</option>`).join('');
+        }
+
+        function renderSpecs() {
+            const list = document.getElementById('specs-list');
+            list.innerHTML = `
+                <li class="flex justify-between items-center text-sm"><span class="text-gray-500">Height / Weight:</span><span class="font-bold">${specsData.height} cm / ${specsData.weight} kg</span></li>
+                <li class="flex justify-between items-center text-sm"><span class="text-gray-500">Arm:</span><span class="font-bold">${specsData.arm}</span></li>
+                <li class="flex justify-between items-center text-sm"><span class="text-gray-500">Shaft Length:</span><span class="font-bold text-accent">${specsData.shaft}</span></li>
+                <li class="flex justify-between items-center text-sm"><span class="text-gray-500">Flex Profile:</span><span class="font-bold">${specsData.flex}</span></li>
+                <li class="flex justify-between items-center text-sm"><span class="text-gray-500">Grips:</span><span class="font-bold">${specsData.grip}</span></li>
+            `;
+        }
+
+        function renderWishlist() {
+            const list = document.getElementById('wishlist-list');
+            list.innerHTML = wishlistData.map(item => `
+                <li class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg flex justify-between items-center">
+                    <div class="font-semibold text-sm">${item.text}</div>
+                    ${item.link ? `<a href="${item.link}" target="_blank" class="text-primary hover:text-primaryHover"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : ''}
+                </li>
+            `).join('');
+        }
+
+        // --- Editing Modals Logic ---
+        function openEditModal(type) {
+            const modal = document.getElementById(`edit-${type}-modal`);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.querySelector('div').classList.remove('scale-95');
+                modal.querySelector('div').classList.add('scale-100');
+            }, 10);
+
+            if (type === 'clubs') {
+                editBagData = JSON.parse(JSON.stringify(bagData));
+                renderEditClubsUI();
+            } else if (type === 'specs') {
+                document.getElementById('spec-height').value = specsData.height;
+                document.getElementById('spec-weight').value = specsData.weight;
+                document.getElementById('spec-arm').value = specsData.arm;
+                document.getElementById('spec-shaft').value = specsData.shaft;
+                document.getElementById('spec-flex').value = specsData.flex;
+                document.getElementById('spec-grip').value = specsData.grip;
+            } else if (type === 'wishlist') {
+                editWishlistData = JSON.parse(JSON.stringify(wishlistData));
+                renderEditWishlistUI();
+            }
+        }
+
+        function closeEditModal(type) {
+            const modal = document.getElementById(`edit-${type}-modal`);
+            modal.classList.add('opacity-0');
+            modal.querySelector('div').classList.remove('scale-100');
+            modal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        // Clubs Editing
+        function renderEditClubsUI() {
+            const container = document.getElementById('edit-clubs-container');
+            const optionsHTML = Object.keys(targetContactMap).map(c => `<option value="${c}">${c}</option>`).join('');
+            
+            container.innerHTML = editBagData.map((item, index) => `
+                <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center bg-gray-50 dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <button onclick="setEditClubFav(${index})" class="text-xl transition-colors ${item.isFav ? 'text-yellow-400' : 'text-gray-300 dark:text-gray-600 hover:text-yellow-200'}" title="Set as Favorite">
+                        <i class="fa-solid fa-star"></i>
+                    </button>
+                    <div class="flex-grow w-full sm:w-auto">
+                        <label class="text-xs text-gray-500">Club</label>
+                        <select onchange="updateEditClub(${index}, 'club', this.value)" class="w-full bg-white dark:bg-darkCard border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none">
+                            ${optionsHTML.replace(`value="${item.club}"`, `value="${item.club}" selected`)}
+                        </select>
+                    </div>
+                    <div class="w-full sm:w-24">
+                        <label class="text-xs text-gray-500">Carry (m)</label>
+                        <input type="text" value="${item.carry}" onchange="updateEditClub(${index}, 'carry', this.value)" class="w-full bg-white dark:bg-darkCard border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none">
+                    </div>
+                    <div class="w-full sm:w-1/3">
+                        <label class="text-xs text-gray-500">Contact (Locked)</label>
+                        <div class="text-xs font-semibold text-gray-600 dark:text-gray-400 mt-1 truncate" title="${item.contact}">${item.contact}</div>
+                    </div>
+                    <div class="flex items-center space-x-1 self-end sm:self-center mt-2 sm:mt-0">
+                        <button onclick="moveEditClub(${index}, -1)" ${index === 0 ? 'disabled' : ''} class="text-gray-400 hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed p-2 transition-colors" title="Move Up"><i class="fa-solid fa-arrow-up"></i></button>
+                        <button onclick="moveEditClub(${index}, 1)" ${index === editBagData.length - 1 ? 'disabled' : ''} class="text-gray-400 hover:text-primary disabled:opacity-30 disabled:cursor-not-allowed p-2 transition-colors" title="Move Down"><i class="fa-solid fa-arrow-down"></i></button>
+                        <button onclick="removeEditClub(${index})" class="text-red-500 hover:text-red-700 p-2" title="Remove"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateEditClub(index, field, value) {
+            editBagData[index][field] = value;
+            if (field === 'club') {
+                editBagData[index].contact = targetContactMap[value];
+                renderEditClubsUI(); // refresh to show updated contact
+            }
+        }
+
+        function setEditClubFav(index) {
+            editBagData.forEach((c, i) => c.isFav = (i === index));
+            renderEditClubsUI();
+        }
+
+        function addEditClubRow() {
+            editBagData.push({ id: Date.now(), club: "7-Iron", carry: "100", contact: targetContactMap["7-Iron"], isFav: false });
+            renderEditClubsUI();
+        }
+
+        function removeEditClub(index) {
+            editBagData.splice(index, 1);
+            renderEditClubsUI();
+        }
+
+        function moveEditClub(index, direction) {
+            if (index + direction < 0 || index + direction >= editBagData.length) return;
+            const temp = editBagData[index];
+            editBagData[index] = editBagData[index + direction];
+            editBagData[index + direction] = temp;
+            renderEditClubsUI();
+        }
+
+        function saveClubs() {
+            bagData = [...editBagData];
+            renderClubs();
+            closeEditModal('clubs');
+        }
+
+        // Specs Editing
+        function saveSpecs() {
+            specsData = {
+                height: document.getElementById('spec-height').value || "188",
+                weight: document.getElementById('spec-weight').value || "90",
+                arm: document.getElementById('spec-arm').value,
+                shaft: document.getElementById('spec-shaft').value,
+                flex: document.getElementById('spec-flex').value,
+                grip: document.getElementById('spec-grip').value
+            };
+            renderSpecs();
+            closeEditModal('specs');
+        }
+
+        // Wishlist Editing
+        function renderEditWishlistUI() {
+            const container = document.getElementById('edit-wishlist-container');
+            container.innerHTML = editWishlistData.map((item, index) => `
+                <div class="flex flex-col sm:flex-row gap-3 items-center bg-gray-50 dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <input type="text" placeholder="Item Name" value="${item.text}" onchange="updateEditWishlist(${index}, 'text', this.value)" class="flex-grow w-full bg-white dark:bg-darkCard border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none">
+                    <input type="text" placeholder="URL Link (optional)" value="${item.link}" onchange="updateEditWishlist(${index}, 'link', this.value)" class="flex-grow w-full bg-white dark:bg-darkCard border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none">
+                    <button onclick="removeEditWishlist(${index})" class="text-red-500 hover:text-red-700 p-2"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function updateEditWishlist(index, field, value) {
+            editWishlistData[index][field] = value;
+        }
+
+        function addEditWishlistRow() {
+            editWishlistData.push({ text: "", link: "" });
+            renderEditWishlistUI();
+        }
+
+        function removeEditWishlist(index) {
+            editWishlistData.splice(index, 1);
+            renderEditWishlistUI();
+        }
+
+        function saveWishlist() {
+            // Filter out empty rows
+            wishlistData = editWishlistData.filter(i => i.text.trim() !== "");
+            renderWishlist();
+            closeEditModal('wishlist');
+        }
+
+        // Initialize dynamic renders on load
+        renderClubs();
+        renderSpecs();
+        renderWishlist();
+
+        // ==========================================
+        // ✨ GEMINI API INTEGRATIONS ✨
+        // ==========================================
+        const apiKey = ""; // API Key injected by environment
+
+        // Helper: Fetch with Exponential Backoff
+        async function fetchWithRetry(url, options, retries = 5) {
+            const delays = [1000, 2000, 4000, 8000, 16000];
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const res = await fetch(url, options);
+                    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                    return await res.json();
+                } catch (err) {
+                    if (i === retries - 1) throw err;
+                    await new Promise(resolve => setTimeout(resolve, delays[i]));
+                }
+            }
+        }
+
+        // Helper: Core Gemini Call
+        async function callGemini(prompt, systemInstruction) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                systemInstruction: { parts: [{ text: systemInstruction }] }
+            };
+            
+            const data = await fetchWithRetry(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            
+            return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
+        }
+
+        // Feature 1: AI Swing Thought Generator
+        async function generateSwingThought() {
+            const textEl = document.getElementById('swing-thought-text');
+            const originalText = textEl.innerHTML;
+            
+            // Loading state
+            textEl.innerHTML = '<span class="flex items-center text-primary"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Channeling inner tiger...</span>';
+            
+            try {
+                const systemPrompt = "You are a friendly, encouraging golf coach for Colvin, a 188cm tall beginner who started in Oct 2025.";
+                const userPrompt = "Give Colvin a brand new, catchy 1-sentence swing thought or piece of motivation for today's range session. Do not use quotation marks in the output. Keep it under 15 words.";
+                
+                let response = await callGemini(userPrompt, systemPrompt);
+                textEl.innerText = `"${response.trim()}"`;
+            } catch (err) {
+                console.error("Gemini API Error:", err);
+                textEl.innerHTML = originalText;
+                // Graceful fallback UI failure message not needed as we restore original text
+            }
+        }
+
+        // Feature 2: AI Swing Diagnoser
+        async function diagnoseSwing() {
+            const inputEl = document.getElementById('ai-symptom-input');
+            const outputEl = document.getElementById('ai-coach-output');
+            const symptom = inputEl.value.trim();
+            
+            if (!symptom) return;
+            
+            // UI Loading State
+            outputEl.classList.remove('hidden');
+            outputEl.innerHTML = '<div class="flex items-center text-primary font-bold"><i class="fa-solid fa-spinner fa-spin mr-2 text-xl"></i> Coach is analyzing your swing fault...</div>';
+            
+            try {
+                const systemPrompt = "You are an expert, encouraging golf coach helping Colvin, a 188cm tall beginner golfer who started in Oct 2025. You give actionable, simple advice.";
+                const userPrompt = `Colvin says his current golf struggle is: "${symptom}". \n\nGive him a quick, encouraging 3-step diagnosis and drill to fix this issue at the driving range. Format the response in simple HTML using <ul>, <li>, and <strong> tags for emphasis. Do not wrap the response in markdown blocks like \`\`\`html. Keep the total response under 100 words so he can read it quickly at the range.`;
+                
+                let response = await callGemini(userPrompt, systemPrompt);
+                
+                // Clean up any potential markdown formatting
+                response = response.replace(/```html\n?/g, '').replace(/```\n?/g, '');
+                
+                outputEl.innerHTML = response;
+            } catch (err) {
+                console.error("Gemini API Error:", err);
+                outputEl.innerHTML = '<span class="text-red-500 font-semibold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Sorry, the AI Coach is resting. Try keeping your head still and swinging easy!</span>';
+            }
+        }
+
+    </script>
+</body>
+</html>

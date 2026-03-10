@@ -712,11 +712,13 @@
             return JSON.parse(JSON.stringify(defaultState));
         }
 
-        function loadState() {
+        async function loadState() {
             try {
-                const raw = window.localStorage.getItem(STORAGE_KEY);
-                if (!raw) return cloneDefaultState();
-                const parsed = JSON.parse(raw);
+                const res = await fetch('/api/state', { cache: 'no-store' });
+                if (!res.ok) {
+                    throw new Error(`Failed to fetch state: ${res.status}`);
+                }
+                const parsed = await res.json();
                 // Very light merge to avoid losing new defaults
                 const state = cloneDefaultState();
                 if (parsed.userPrefs) state.userPrefs = { ...state.userPrefs, ...parsed.userPrefs };
@@ -733,18 +735,24 @@
                 }
                 return state;
             } catch (e) {
-                console.warn('Failed to load saved state, using defaults.', e);
+                console.warn('Failed to load saved state from server, using defaults.', e);
                 return cloneDefaultState();
             }
         }
 
-        let appState = loadState();
+        let appState = cloneDefaultState();
 
-        function saveState() {
+        async function saveState() {
             try {
-                window.localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+                await fetch('/api/state', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(appState)
+                });
             } catch (e) {
-                console.warn('Failed to save state.', e);
+                console.warn('Failed to save state to server.', e);
             }
         }
 
@@ -1238,11 +1246,17 @@
             closeEditModal('wishlist');
         }
 
+        async function initApp() {
+            appState = await loadState();
+            applyThemeFromState();
+            renderClubs();
+            renderSpecs();
+            renderWishlist();
+            renderPassportTimeline();
+        }
+
         // Initialize dynamic renders on load
-        renderClubs();
-        renderSpecs();
-        renderWishlist();
-        renderPassportTimeline();
+        initApp();
 
         // ==========================================
         // ✨ GEMINI API INTEGRATIONS ✨

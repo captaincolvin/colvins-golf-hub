@@ -1,43 +1,47 @@
 ## Colvin's Golf Hub
 
-Personal golf dashboard with JSON-backed persistence for bag, specs, wishlist, passport rounds, and TopTracer sessions.
+Personal golf dashboard for bag, specs, wishlist, passport rounds, and TopTracer sessions.
 
-### Prerequisites
+This project is designed to run as a **pure static site** (for example on GitHub Pages) and uses the browser's `localStorage` for persistence.
 
-- Node.js installed (LTS is recommended).
-- From the project root (`colvins-golf-hub`), run the dependency install once:
+### How persistence works
 
-```bash
-npm install
-```
+- The app keeps an in-memory `appState` object that drives all UI.
+- **When the backend is running** (`npm start`): On load it fetches `/api/state` and uses that. Saves go to the server, which writes to `data/userPrefs.json`, `data/bag.json`, `data/passport.json`, and `data/topTracer.json`. All devices hitting the same server see the same data.
+- **When no backend is present** (e.g. opening `index.html` or GitHub Pages): It uses `localStorage` under the key `colvinGolfHubStateV1`. Data is per browser/device and does not sync.
 
-> Note: If `npm install` fails from your editor's integrated terminal, try running it from a regular system terminal in this folder.
-
-### Running the app
+### Running with shared data (backend)
 
 From the project root:
 
 ```bash
+npm install
 npm start
 ```
 
-Then open `http://localhost:3000/` in your browser.
+Then open `http://localhost:3000` or, from other devices on your network, `http://<this-machine-ip>:3000`. The same JSON files are used for every client, so data stays consistent across devices and refreshes.
 
-The server will:
+### Running locally (static only)
 
-- Serve `index.html` and static assets from the project root.
-- Expose a JSON persistence API:
-  - `GET /api/state` – read the current app state from `data/appState.json`.
-  - `PUT /api/state` – overwrite `data/appState.json` with the state sent from the frontend.
+You can open `index.html` directly in your browser. For a static server without the API (e.g. to mimic GitHub Pages):
 
-### Data persistence
+```bash
+npx serve .
+```
 
-- Initial data is seeded from `data/appState.json`.
-- When you interact with the UI (edit bag, specs, wishlist, add rounds, save TopTracer sessions, etc.), the frontend updates an in-memory `appState` and calls `PUT /api/state` to persist changes.
-- On each page load/refresh, the frontend:
-  - Calls `GET /api/state`.
-  - Merges the result into its `defaultState`.
-  - Renders from that merged state.
+Data will then be stored only in the browser’s `localStorage` (per origin).
 
-If the backend is unreachable or the JSON file is unreadable, the frontend falls back to the built-in defaults so the page still works (but those fallback changes will not be persisted).
+### Deploying to GitHub Pages
+
+1. Create a new GitHub repository and add the contents of this folder (at minimum `index.html`).
+2. Commit and push to GitHub.
+3. In the repo, go to **Settings → Pages**.
+4. Under **Source**, choose your main branch and root (or `/docs` if you move the file there), then save.
+5. After GitHub builds the site, open:
+   - `https://<your-username>.github.io/<repo-name>/`
+
+From there, the site will behave the same as locally:
+
+- All your edits persist in your browser via `localStorage`.
+- No backend or environment variables are required.
 
